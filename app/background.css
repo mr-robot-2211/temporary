@@ -1,0 +1,21 @@
+/* Apply background image using a pseudo-element */
+.background::before {
+  content: "";
+  background-image: url('./Background_img.png'); /* Adjust path as necessary */
+  background-size: cover; /* Ensure the image covers the element */
+  background-position: center; /* Center the image */
+  background-attachment: fixed; /* Fix the background image */
+  position: fixed; /* Fix the element in place */
+  top: 0;
+  left: 0;
+  height: 100vh; /* Ensure it covers the viewport height */
+  width: 100%; /* Ensure it covers the viewport width */
+  z-index: -1; /* Place it behind other elements */
+  opacity: 0.4; /* Optional: adjust opacity for better readability */
+}
+
+/* Ensure other elements have transparent background if necessary */
+.main-content {
+  position: relative; /* Ensure it's positioned above the pseudo-element */
+  padding: 20px; /* Adjust padding as necessary */
+}
