@@ -53,7 +53,7 @@ export default function AuthenticationForm(props: PaperProps) {
       <Text size="lg" fw={500}>
         Welcome to Sovesa, {type} with
       </Text>
-
+ 
       <Group grow mb="md" mt="md">
         <GoogleButton radius="xl" onClick={() => signIn("google")}>Google</GoogleButton>
       </Group>

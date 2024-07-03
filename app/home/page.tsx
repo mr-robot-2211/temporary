@@ -172,7 +172,7 @@ export function LeadGrid() {
 import { useEffect } from 'react';
 import { Carousel } from '@mantine/carousel';
 import { useMediaQuery, useInterval } from '@mantine/hooks';
-import { Paper, Text, Title, Button, useMantineTheme, rem } from '@mantine/core';
+import { Paper, Text, Title, useMantineTheme, rem } from '@mantine/core';
 import classes2 from './cardCarousal.module.css';
 
 interface CardProps {
@@ -271,7 +271,6 @@ export function CardsCarousel() {
 
 import { useRef } from 'react';
 import { Autocomplete, Loader } from '@mantine/core';
-import Link from 'next/link';
 
 export function AutocompleteLoading() {
   const timeoutRef = useRef<number>(-1);
@@ -307,7 +306,11 @@ export function AutocompleteLoading() {
 }
 
 //header
-
+// import { useState } from 'react';
+import { SessionProvider, signIn,signOut } from "next-auth/react";
+import {Button } from '@mantine/core'; // Adjust imports as needed
+import Link from 'next/link'; // Assuming you are using Next.js
+// import { useDisclosure } from '@mantine/hooks'; // If you are using Mantine
 const userLinks = [
   { link: '/home/sign-up', label: 'Sign up' },
   { link: '/sign-in', label: 'Sign in' },
@@ -316,52 +319,67 @@ const userLinks = [
 
 const mainLinks = [
   { link: '#', label: 'Daily practices' },
-  { link: '#', label: 'Courses' },
+  { link: '/home/courses', label: 'Courses' },
   { link: '#', label: 'Our philosophy' },
   { link: '#', label: 'Trips' },
   { link: '#', label: 'Festivals & events' },
   { link: '#', label: 'About us' },
 ];
 
-export function DoubleHeader(){
+export function DoubleHeader() {
   const [opened, { toggle }] = useDisclosure(false);
   const [active, setActive] = useState(0);
 
   const mainItems = mainLinks.map((item, index) => (
-    // <Link href={item.link}>
-      <Anchor<'a'>
-        href={item.link}
-        key={item.label}
-        className={classes1.mainLink}
-        data-active={index === active || undefined}
-        onClick={(event) => {
-          event.preventDefault();
-          setActive(index);
-        }}
-      >
-        {item.label}
-      </Anchor>
-    // </Link>
-  ));
-
-  const secondaryItems = userLinks.map((item) => (
-    // <Anchor
+    // <Anchor<'a'>
     //   href={item.link}
     //   key={item.label}
-    //   onClick={(event) => event.preventDefault()}
-    //   className={classes1.secondaryLink}
+    //   className={classes1.mainLink}
+    //   data-active={index === active || undefined}
+    //   onClick={(event) => {
+    //     event.preventDefault();
+    //     setActive(index);
+    //   }}
     // >
     //   {item.label}
     // </Anchor>
-    <Link href={item.link}>
-      {item.label}
-    </Link>
+    <Link href={item.link} key={item.label} legacyBehavior>
+    <a className={classes1.mainLink}>{item.label}</a>
+   </Link>
   ));
+
+  const secondaryItems = userLinks.map((item) => {
+    // return <Button onClick={() => signIn("google")}>Sign in with Google</Button>;
+    if (item.label === 'Sign in') {
+      return (
+        <Button
+          key={item.label}
+          onClick={() => signIn("google")} // Replace signOut() with your sign out function
+          style={{
+            backgroundColor: 'transparent',
+            color: 'inherit',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+          }}
+          className={classes1.secondaryLink}
+        >
+          Sign in with Google
+        </Button>
+      );
+    } else {
+      return (
+        <Link href={item.link} key={item.label} legacyBehavior>
+          <a className={classes1.secondaryLink}>{item.label}</a>
+        </Link>
+      );
+    }
+  });
 
   return (
     <header className={classes1.header}>
       <Container className={classes1.inner}>
-      <img src={img.src} alt="Logo" className={classes1.logo} width="100" height="80" /> 
+        <img src={img.src} alt="Logo" className={classes1.logo} width="100" height="80" /> 
         <Box className={classes1.links} visibleFrom="sm">
           <Group justify="flex-end">{secondaryItems}</Group>
           <Group gap={0} justify="flex-end" className={classes1.mainLinks}>
@@ -379,6 +397,7 @@ export function DoubleHeader(){
     </header>
   );
 }
+
 
 export default function Home() {
   return (
